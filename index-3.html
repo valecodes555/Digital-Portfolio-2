@@ -1,0 +1,630 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Novanext Impact System</title>
+  <style>
+    :root{
+      --bg:#09111f;
+      --panel:#0f1b2e;
+      --panel-2:#13233b;
+      --soft:#a9bbd4;
+      --text:#ecf5ff;
+      --line:rgba(255,255,255,.08);
+      --blue:#69a7ff;
+      --blue-2:#8fd3ff;
+      --cyan:#75d9ff;
+      --glow:rgba(105,167,255,.28);
+      --success:#79f0c8;
+      --warn:#ffc96b;
+      --danger:#ff8f8f;
+      --shadow:0 20px 60px rgba(0,0,0,.38);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    html,body{
+      margin:0; min-height:100%;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(105,167,255,.22), transparent 30%),
+        radial-gradient(circle at 85% 10%, rgba(117,217,255,.12), transparent 24%),
+        linear-gradient(180deg, #07101d 0%, #09111f 50%, #0a1424 100%);
+      color:var(--text);
+      overflow:hidden;
+    }
+    body::before{
+      content:""; position:fixed; inset:0;
+      background:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: radial-gradient(circle at center, black 45%, transparent 90%);
+      pointer-events:none; opacity:.35;
+    }
+    .app{display:grid; grid-template-columns:280px 1fr; min-height:100vh; position:relative; z-index:1;}
+    .sidebar{
+      position:relative; padding:26px 20px 20px;
+      background:linear-gradient(180deg, rgba(8,16,30,.92), rgba(10,20,36,.84));
+      border-right:1px solid var(--line); backdrop-filter: blur(18px);
+      box-shadow: inset -1px 0 0 rgba(255,255,255,.03);
+      display:flex; flex-direction:column; gap:18px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:14px; padding:14px;
+      border:1px solid var(--line); border-radius:22px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+    }
+    .logo{
+      width:48px; height:48px; border-radius:16px;
+      background:
+        radial-gradient(circle at 30% 30%, #cce7ff, #7fb8ff 35%, #2d62d8 78%),
+        linear-gradient(135deg,#8fd3ff,#69a7ff);
+      box-shadow:0 0 0 1px rgba(255,255,255,.12), 0 12px 35px rgba(105,167,255,.34);
+      position:relative; overflow:hidden; flex:0 0 auto;
+    }
+    .logo::after{
+      content:"N"; position:absolute; inset:0; display:grid; place-items:center;
+      font-weight:900; font-size:22px; color:white; letter-spacing:.04em;
+      text-shadow:0 4px 16px rgba(0,0,0,.25);
+    }
+    .brand h1{margin:0; font-size:1.05rem; line-height:1.1;}
+    .brand p{margin:4px 0 0; color:var(--soft); font-size:.82rem;}
+    .nav{display:flex; flex-direction:column; gap:10px; margin-top:8px;}
+    .nav button{
+      width:100%; border:1px solid transparent; background:rgba(255,255,255,.03); color:var(--text);
+      text-align:left; padding:14px 16px; border-radius:18px; cursor:pointer; transition:.24s ease; font-size:.96rem;
+    }
+    .nav button:hover{
+      transform:translateX(4px); background:rgba(105,167,255,.13);
+      border-color:rgba(143,211,255,.25); box-shadow:0 8px 24px rgba(105,167,255,.16);
+    }
+    .nav button.active{
+      background:linear-gradient(135deg, rgba(105,167,255,.23), rgba(143,211,255,.12));
+      border-color:rgba(143,211,255,.24);
+      box-shadow:0 14px 28px rgba(105,167,255,.18), inset 0 0 0 1px rgba(255,255,255,.02);
+    }
+    .sidebar-foot{
+      margin-top:auto; padding:16px; border:1px solid var(--line); border-radius:22px;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.025));
+    }
+    .sidebar-foot .tiny{color:var(--soft); font-size:.8rem; margin-top:8px; line-height:1.45;}
+    .workspace{position:relative; overflow:hidden;}
+    .screen{
+      position:absolute; inset:0; padding:30px; overflow:auto;
+      opacity:0; transform:translateY(20px) scale(.985); pointer-events:none;
+      transition:opacity .42s ease, transform .42s ease;
+    }
+    .screen.active{opacity:1; transform:translateY(0) scale(1); pointer-events:auto;}
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:18px; margin-bottom:22px;
+      position:sticky; top:0; z-index:5; backdrop-filter: blur(12px); padding-bottom:8px;
+    }
+    .chip{
+      display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:999px;
+      border:1px solid rgba(143,211,255,.16); background:rgba(255,255,255,.04);
+      color:#d8eeff; box-shadow:0 10px 20px rgba(0,0,0,.18); font-size:.84rem;
+    }
+    .hero{
+      position:relative; overflow:hidden; padding:34px; border-radius:32px; border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(143,211,255,.14), transparent 22%),
+        radial-gradient(circle at 82% 24%, rgba(105,167,255,.20), transparent 20%),
+        linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      box-shadow:var(--shadow); margin-bottom:22px;
+    }
+    .hero::after{
+      content:""; position:absolute; width:360px; height:360px; right:-80px; top:-120px; border-radius:50%;
+      background:radial-gradient(circle, rgba(117,217,255,.22), transparent 65%); pointer-events:none;
+    }
+    .hero-grid{display:grid; grid-template-columns:1.2fr .8fr; gap:24px; align-items:stretch;}
+    .eyebrow{color:#9ed7ff; text-transform:uppercase; letter-spacing:.18em; font-size:.75rem; margin-bottom:14px;}
+    h1,h2,h3{margin:0}
+    .hero h1{font-size:clamp(2.2rem, 4vw, 4rem); line-height:1; margin-bottom:14px; max-width:11ch;}
+    .lead{color:var(--soft); max-width:720px; font-size:1.05rem; line-height:1.65;}
+    .hero-actions{display:flex; flex-wrap:wrap; gap:12px; margin-top:24px;}
+    .btn{
+      border:none; cursor:pointer; border-radius:16px; padding:14px 18px; font-weight:700; color:#fff; transition:.24s ease;
+    }
+    .btn-primary{background:linear-gradient(135deg, #4f86ff, #7bc9ff); box-shadow:0 12px 30px rgba(105,167,255,.32);}
+    .btn-secondary{background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08);}
+    .btn:hover{transform:translateY(-2px)} .btn:active{transform:translateY(0)}
+    .floating-panel{
+      align-self:stretch; border:1px solid var(--line); border-radius:28px; padding:20px;
+      background:linear-gradient(180deg, rgba(13,26,46,.92), rgba(14,27,45,.7));
+      box-shadow:var(--shadow); display:flex; flex-direction:column; justify-content:space-between; gap:18px;
+    }
+    .mini-stat-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+    .mini-stat{padding:16px; border-radius:20px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06);}
+    .mini-stat .label{color:var(--soft); font-size:.82rem}
+    .mini-stat .value{font-size:1.4rem; font-weight:800; margin-top:6px}
+    .section-grid{display:grid; grid-template-columns:repeat(12, 1fr); gap:18px;}
+    .card{
+      position:relative; overflow:hidden; background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border:1px solid var(--line); border-radius:26px; padding:22px; box-shadow:var(--shadow);
+    }
+    .interactive{cursor:pointer; transition:transform .28s ease, border-color .28s ease, box-shadow .28s ease;}
+    .interactive:hover{
+      transform:translateY(-6px) rotateX(2deg);
+      border-color:rgba(143,211,255,.24);
+      box-shadow:0 18px 45px rgba(10,25,45,.4), 0 0 0 1px rgba(143,211,255,.10), 0 0 40px rgba(105,167,255,.12);
+    }
+    .card::before{
+      content:""; position:absolute; inset:auto -25% -30% auto; width:180px; height:180px; border-radius:50%;
+      background:radial-gradient(circle, rgba(105,167,255,.18), transparent 65%); pointer-events:none;
+    }
+    .panel-hero{grid-column:span 6; min-height:210px; display:flex; flex-direction:column; justify-content:space-between;}
+    .panel-hero .icon{font-size:1.8rem; margin-bottom:10px}
+    .panel-hero p{color:var(--soft); line-height:1.6; max-width:44ch;}
+    .arrow{margin-top:16px; display:inline-flex; align-items:center; gap:8px; color:#dff2ff; font-weight:700;}
+    .kpis{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:22px;}
+    .kpi{padding:18px; border-radius:22px; border:1px solid var(--line); background:rgba(255,255,255,.04);}
+    .kpi .top{color:var(--soft); font-size:.82rem;}
+    .kpi .num{font-size:2rem; font-weight:800; margin-top:12px;}
+    .split{display:grid; grid-template-columns:1.1fr .9fr; gap:18px; margin-top:18px;}
+    .list{display:grid; gap:14px;}
+    .list-item{
+      display:flex; gap:14px; align-items:flex-start; padding:14px 16px; border-radius:18px;
+      background:rgba(255,255,255,.035); border:1px solid rgba(255,255,255,.055);
+    }
+    .dot{
+      width:12px; height:12px; border-radius:50%; margin-top:6px;
+      background:linear-gradient(135deg, #7bc9ff, #4f86ff); box-shadow:0 0 20px rgba(105,167,255,.4); flex:0 0 auto;
+    }
+    .bar-wrap{display:grid; gap:14px; margin-top:18px;}
+    .bar-row{display:grid; gap:8px;}
+    .bar-label{display:flex; justify-content:space-between; color:#dbeeff; font-size:.92rem;}
+    .bar-track{
+      height:14px; border-radius:999px; background:rgba(255,255,255,.06); overflow:hidden;
+      border:1px solid rgba(255,255,255,.05);
+    }
+    .bar-fill{height:100%; width:0; border-radius:999px; transition:width 1.2s cubic-bezier(.2,.8,.2,1); box-shadow:0 0 20px rgba(255,255,255,.1);}
+    .fill-1{background:linear-gradient(90deg, #6ba2ff, #87c8ff)}
+    .fill-2{background:linear-gradient(90deg, #78e4ff, #6ba2ff)}
+    .fill-3{background:linear-gradient(90deg, #8de3c5, #6ad0ff)}
+    .fill-4{background:linear-gradient(90deg, #9fb8ff, #8be9ff)}
+    .ring-wrap{display:flex; align-items:center; justify-content:center; min-height:290px;}
+    .ring{
+      --p:72; width:220px; height:220px; border-radius:50%; display:grid; place-items:center;
+      background:
+        radial-gradient(closest-side, #0c172a 72%, transparent 73% 100%),
+        conic-gradient(#8bd3ff calc(var(--p)*1%), rgba(255,255,255,.07) 0);
+      box-shadow:0 0 0 1px rgba(255,255,255,.06), inset 0 0 40px rgba(105,167,255,.08), 0 20px 60px rgba(0,0,0,.36);
+    }
+    .ring-inner{text-align:center;}
+    .ring-value{font-size:2.8rem; font-weight:900; line-height:1;}
+    .ring-caption{color:var(--soft); margin-top:6px; font-size:.92rem;}
+    .login-wrap{max-width:480px; margin:40px auto 0;}
+    .field{display:grid; gap:8px; margin-bottom:14px;}
+    .field label{color:#d7ebff; font-size:.92rem; font-weight:600;}
+    .field input{
+      width:100%; padding:15px 16px; border-radius:16px; border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.05); color:white; outline:none; font-size:1rem; transition:.2s ease;
+    }
+    .field input:focus{border-color:rgba(143,211,255,.4); box-shadow:0 0 0 4px rgba(105,167,255,.12);}
+    .helper{color:var(--soft); font-size:.85rem; line-height:1.5;}
+    .badge-row{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;}
+    .badge{
+      padding:10px 14px; border-radius:999px; background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.07); color:#e8f5ff; font-size:.88rem;
+    }
+    .skills-emoji{display:flex; flex-wrap:wrap; gap:14px; margin-top:20px; font-size:1.9rem;}
+    .skills-emoji span{
+      width:62px; height:62px; display:grid; place-items:center; border-radius:18px;
+      background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 12px 24px rgba(0,0,0,.18); transition:.24s ease;
+    }
+    .skills-emoji span:hover{transform:translateY(-4px) scale(1.04);}
+    .section-title{margin-top:6px; font-size:1.8rem; margin-bottom:8px;}
+    .section-text{color:var(--soft); line-height:1.65; max-width:780px; margin-bottom:18px;}
+    .subgrid-2{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+    .small-metric{
+      padding:16px 18px; border-radius:18px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06);
+    }
+    .small-metric strong{display:block; font-size:1.34rem; margin-top:8px;}
+    .screen::-webkit-scrollbar{width:10px}
+    .screen::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12); border-radius:999px;}
+    .screen::-webkit-scrollbar-track{background:transparent}
+    @media (max-width:1180px){
+      .app{grid-template-columns:1fr}
+      .sidebar{height:auto; position:sticky; top:0; z-index:10}
+      .workspace{min-height:calc(100vh - 240px)}
+      .hero-grid,.split,.subgrid-2{grid-template-columns:1fr}
+      .panel-hero{grid-column:span 12}
+      .kpis{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:760px){
+      .screen{padding:18px}
+      .hero{padding:22px; border-radius:24px}
+      .section-grid{grid-template-columns:1fr}
+      .panel-hero{grid-column:span 1}
+      .kpis{grid-template-columns:1fr}
+      .brand{padding:12px}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>Novanext</h1>
+          <p>Digital Portfolio Enterprise</p>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-link active" data-screen="home">Home</button>
+        <button class="nav-link" data-screen="dashboard">Dashboard</button>
+        <button class="nav-link" data-screen="user-login">Area Utente</button>
+        <button class="nav-link" data-screen="team">Team</button>
+        <button class="nav-link" data-screen="organization">Organizzazione</button>
+        <button class="nav-link" data-screen="compliance">Compliance & Accesso</button>
+      </nav>
+
+      <div class="sidebar-foot">
+        <strong>Posizionamento</strong>
+        <div class="tiny">
+          Da “azienda che vende corsi” a infrastruttura che rende visibile e misurabile il capitale umano per grandi clienti Enterprise e PA.
+        </div>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <section class="screen active" id="screen-home">
+        <div class="topbar">
+          <div class="chip">Enterprise Area · Novanext</div>
+          <div class="chip">Piattaforma demo interattiva</div>
+        </div>
+
+        <div class="hero">
+          <div class="hero-grid">
+            <div>
+              <div class="eyebrow">Novanext Impact System</div>
+              <h1>Dalla formazione all’evidenza di impatto</h1>
+              <p class="lead">
+                Un portfolio digitale a tre livelli che connette persone, team e organizzazione.
+                Non un archivio di attestati, ma una piattaforma che rende visibile, misurabile e verificabile il capitale umano sviluppato nei programmi formativi.
+              </p>
+              <div class="hero-actions">
+                <button class="btn btn-primary go-screen" data-target="dashboard">Esplora la Dashboard</button>
+                <button class="btn btn-secondary go-screen" data-target="user-login">Apri Area Utente</button>
+              </div>
+            </div>
+
+            <div class="floating-panel">
+              <div><div class="chip">Readiness overview</div></div>
+              <div class="mini-stat-grid">
+                <div class="mini-stat"><div class="label">Competenze sviluppate</div><div class="value counter" data-target="68" data-suffix="%">0%</div></div>
+                <div class="mini-stat"><div class="label">Applicazione pratica</div><div class="value counter" data-target="74" data-suffix="%">0%</div></div>
+                <div class="mini-stat"><div class="label">Project work</div><div class="value counter" data-target="124">0</div></div>
+                <div class="mini-stat"><div class="label">Riduzione tempi</div><div class="value counter" data-target="32" data-prefix="-" data-suffix="%">0%</div></div>
+              </div>
+              <div class="helper">
+                Ogni evidenza è collegata a progetti reali, badge verificabili e indicatori utili per direzione, HR, funzioni innovation e governance.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-grid">
+          <div class="card interactive panel-hero go-screen" data-target="user-login">
+            <div><div class="icon">👤</div><h3>Area Utente</h3><p>Accesso personale con portfolio del dipendente, competenze acquisite, badge verificabili e project work applicati al contesto aziendale.</p></div>
+            <div class="arrow">Accedi al profilo →</div>
+          </div>
+          <div class="card interactive panel-hero go-screen" data-target="team">
+            <div><div class="icon">🤝</div><h3>Team</h3><p>Vista collaborativa su progetti trasversali, competenze condivise, miglioramenti di processo e casi interni maturati in logica di squadra.</p></div>
+            <div class="arrow">Esplora il team →</div>
+          </div>
+          <div class="card interactive panel-hero go-screen" data-target="organization">
+            <div><div class="icon">🏢</div><h3>Organizzazione</h3><p>KPI di adozione, maturità complessiva, impatto su produttività, tempi e costi. Una vista executive pensata per decision maker enterprise.</p></div>
+            <div class="arrow">Apri KPI organizzativi →</div>
+          </div>
+          <div class="card interactive panel-hero go-screen" data-target="compliance">
+            <div><div class="icon">🔒</div><h3>Compliance & Accesso</h3><p>Gestione ruoli, visibilità differenziata, controllo dei dati, aree private e readiness GDPR per clienti enterprise e settore pubblico.</p></div>
+            <div class="arrow">Vedi governance →</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-dashboard">
+        <div class="topbar">
+          <div class="chip">Dashboard complessiva</div>
+          <button class="btn btn-secondary go-screen" data-target="home">Torna alla Home</button>
+        </div>
+
+        <h2 class="section-title">Dashboard enterprise dei dipendenti</h2>
+        <p class="section-text">Una vista sintetica per dirigenti e sponsor del programma: sviluppo competenze, applicazione pratica, progetti completati e impatto misurabile.</p>
+
+        <div class="kpis">
+          <div class="kpi"><div class="top">% competenze sviluppate</div><div class="num counter" data-target="68" data-suffix="%">0%</div></div>
+          <div class="kpi"><div class="top">Applicazione pratica</div><div class="num counter" data-target="74" data-suffix="%">0%</div></div>
+          <div class="kpi"><div class="top">Progetti completati</div><div class="num counter" data-target="124">0</div></div>
+          <div class="kpi"><div class="top">Impatto su tempi/costi</div><div class="num counter" data-target="32" data-prefix="-" data-suffix="%">0%</div></div>
+        </div>
+
+        <div class="split">
+          <div class="card">
+            <h3>Insight direzionali</h3>
+            <div class="list" style="margin-top:18px">
+              <div class="list-item"><div class="dot"></div><div><strong>Capitale umano attivato</strong><br><span class="helper">La maggior parte dei percorsi ha già generato output applicabili su processi reali.</span></div></div>
+              <div class="list-item"><div class="dot"></div><div><strong>Formazione collegata al business</strong><br><span class="helper">I project work sono ancorati a criticità operative e miglioramento dei servizi.</span></div></div>
+              <div class="list-item"><div class="dot"></div><div><strong>Rendicontazione immediata</strong><br><span class="helper">La piattaforma rende visibili evidenze, badge e metriche utili a sponsor e governance.</span></div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ring-wrap">
+              <div class="ring" id="dashboard-ring" style="--p:72">
+                <div class="ring-inner">
+                  <div class="ring-value counter" data-target="72" data-suffix="%">0%</div>
+                  <div class="ring-caption">Readiness Index</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-user-login">
+        <div class="topbar">
+          <div class="chip">Area Utente · accesso simulato</div>
+          <button class="btn btn-secondary go-screen" data-target="home">Torna alla Home</button>
+        </div>
+
+        <div class="hero">
+          <div class="eyebrow">Accesso personale</div>
+          <h2 class="section-title">Portfolio individuale con accesso controllato</h2>
+          <p class="section-text">Simulazione di ingresso all’area privata del dipendente enterprise. Dopo l’accesso si apre il profilo con progetti, competenze, badge e impatto generato.</p>
+
+          <div class="login-wrap card">
+            <div class="field"><label>Email aziendale</label><input type="email" id="login-email" placeholder="nome.cognome@azienda.it" value="mario.rossi@enterprise.it"></div>
+            <div class="field"><label>Password</label><input type="password" id="login-password" placeholder="Inserisci password" value="Novanext2026"></div>
+            <div class="helper" style="margin-bottom:18px">Demo di accesso riservato per utenti autorizzati. In contesto reale: policy ruoli, visibilità dati e controllo degli accessi.</div>
+            <button class="btn btn-primary" id="login-btn">Accedi al portfolio</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-user-portfolio">
+        <div class="topbar">
+          <div class="chip">Area Utente · portfolio personale</div>
+          <button class="btn btn-secondary go-screen" data-target="user-login">Esci</button>
+        </div>
+
+        <div class="hero">
+          <div class="hero-grid">
+            <div>
+              <div class="eyebrow">Profilo dipendente enterprise</div>
+              <h2 class="section-title" style="font-size:2.4rem">Mario Rossi</h2>
+              <p class="section-text" style="margin-bottom:0">Digital Transformation Specialist · Programmi di innovazione, automazione e miglioramento dei processi in contesto enterprise.</p>
+              <div class="badge-row">
+                <div class="badge">Badge verificabile · Automation</div>
+                <div class="badge">Badge verificabile · UX Process Design</div>
+                <div class="badge">Badge verificabile · Data Literacy</div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Impatto generato</h3>
+              <div class="mini-stat-grid" style="margin-top:18px">
+                <div class="mini-stat"><div class="label">Tempo ridotto</div><div class="value">-30%</div></div>
+                <div class="mini-stat"><div class="label">Adozione</div><div class="value">82%</div></div>
+                <div class="mini-stat"><div class="label">Badge attivi</div><div class="value">6</div></div>
+                <div class="mini-stat"><div class="label">Progetti chiusi</div><div class="value">12</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subgrid-2">
+          <div class="card">
+            <h3>Progetti del dipendente</h3>
+            <div class="list" style="margin-top:18px">
+              <div class="list-item"><div class="dot"></div><div><strong>Digitalizzazione processo approvativo</strong><br><span class="helper">Riduzione dei tempi di gestione del 30% e maggiore tracciabilità interna.</span></div></div>
+              <div class="list-item"><div class="dot"></div><div><strong>Revisione UX portale interno</strong><br><span class="helper">Miglioramento della fruibilità e semplificazione dei task ad alta frequenza.</span></div></div>
+              <div class="list-item"><div class="dot"></div><div><strong>Automazione reporting operativo</strong><br><span class="helper">Meno attività manuali e migliore qualità dei dati condivisi ai manager.</span></div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Competenze acquisite</h3>
+            <div class="bar-wrap">
+              <div class="bar-row"><div class="bar-label"><span>Process Automation</span><span>88%</span></div><div class="bar-track"><div class="bar-fill fill-1" data-width="88%"></div></div></div>
+              <div class="bar-row"><div class="bar-label"><span>UX & Service Design</span><span>76%</span></div><div class="bar-track"><div class="bar-fill fill-2" data-width="76%"></div></div></div>
+              <div class="bar-row"><div class="bar-label"><span>Data Analysis</span><span>81%</span></div><div class="bar-track"><div class="bar-fill fill-3" data-width="81%"></div></div></div>
+              <div class="bar-row"><div class="bar-label"><span>Project Delivery</span><span>84%</span></div><div class="bar-track"><div class="bar-fill fill-4" data-width="84%"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-team">
+        <div class="topbar">
+          <div class="chip">Livello Team</div>
+          <button class="btn btn-secondary go-screen" data-target="home">Torna alla Home</button>
+        </div>
+
+        <h2 class="section-title">Team Innovazione</h2>
+        <p class="section-text">Progetti collaborativi, miglioramenti di processo e casi interni. Il valore non è solo individuale: qui emerge la capacità del gruppo di trasferire competenze in risultati condivisi.</p>
+
+        <div class="subgrid-2">
+          <div class="card">
+            <h3>Progetti collaborativi</h3>
+            <div class="list" style="margin-top:18px">
+              <div class="list-item"><div class="dot"></div><div><strong>Sistema documentale evoluto</strong><br><span class="helper">Nuovo flusso condiviso per indicizzazione, versioning e ricerca rapida.</span></div></div>
+              <div class="list-item"><div class="dot"></div><div><strong>Automazione processi interni</strong><br><span class="helper">Eliminazione di passaggi manuali ripetitivi e maggiore standardizzazione.</span></div></div>
+              <div class="list-item"><div class="dot"></div><div><strong>Casi interni replicabili</strong><br><span class="helper">Buone pratiche documentate e riutilizzabili da altre unità aziendali.</span></div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Competenze condivise</h3>
+            <p class="helper" style="margin-top:10px">Visualizzazione rapida delle aree di lavoro di squadra e delle capability distribuite nel gruppo.</p>
+            <div class="skills-emoji">
+              <span title="Digital">💻</span>
+              <span title="Automation">⚙️</span>
+              <span title="Data">📊</span>
+              <span title="Execution">🎯</span>
+              <span title="Collaboration">🤝</span>
+              <span title="Innovation">🚀</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-organization">
+        <div class="topbar">
+          <div class="chip">Livello Organizzazione</div>
+          <button class="btn btn-secondary go-screen" data-target="home">Torna alla Home</button>
+        </div>
+
+        <h2 class="section-title">Organizzazione · KPI di adozione</h2>
+        <p class="section-text">Visione complessiva del programma: capacità attivate, uso reale dei risultati, progetti completati e contributo al miglioramento operativo. Le percentuali sono demo, inserite per rappresentazione grafica.</p>
+
+        <div class="split">
+          <div class="card">
+            <h3>Adozione e impatto</h3>
+            <div class="bar-wrap">
+              <div class="bar-row"><div class="bar-label"><span>Adozione piattaforma</span><span>84%</span></div><div class="bar-track"><div class="bar-fill fill-1" data-width="84%"></div></div></div>
+              <div class="bar-row"><div class="bar-label"><span>Applicazione pratica dei project work</span><span>71%</span></div><div class="bar-track"><div class="bar-fill fill-2" data-width="71%"></div></div></div>
+              <div class="bar-row"><div class="bar-label"><span>Competenze certificate attive</span><span>78%</span></div><div class="bar-track"><div class="bar-fill fill-3" data-width="78%"></div></div></div>
+              <div class="bar-row"><div class="bar-label"><span>Impatto su produttività/tempi</span><span>66%</span></div><div class="bar-track"><div class="bar-fill fill-4" data-width="66%"></div></div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Perché è strategico</h3>
+            <div class="list" style="margin-top:18px">
+              <div class="list-item"><div class="dot"></div><div><strong>Misurabilità</strong><br><span class="helper">Il portfolio connette formazione e risultati, non solo presenza ai corsi.</span></div></div>
+              <div class="list-item"><div class="dot"></div><div><strong>Scalabilità</strong><br><span class="helper">La logica è replicabile su business unit, funzioni, sedi e programmi diversi.</span></div></div>
+              <div class="list-item"><div class="dot"></div><div><strong>Valore per la governance</strong><br><span class="helper">Direzione e sponsor possono leggere trend, priorità e ritorno organizzativo.</span></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-compliance">
+        <div class="topbar">
+          <div class="chip">Compliance & Accesso</div>
+          <button class="btn btn-secondary go-screen" data-target="home">Torna alla Home</button>
+        </div>
+
+        <h2 class="section-title">Governance per clienti enterprise</h2>
+        <p class="section-text">Il portfolio non è solo bello da vedere: deve essere credibile, controllabile e compatibile con contesti enterprise e Public Administration. Per questo servono accesso differenziato, aree riservate e logiche di compliance.</p>
+
+        <div class="subgrid-2">
+          <div class="card">
+            <h3>Controllo degli accessi</h3>
+            <div class="list" style="margin-top:18px">
+              <div class="list-item"><div class="dot"></div><div><strong>Ruoli e visibilità</strong><br><span class="helper">Utente, manager, HR, direzione, admin: ciascuno vede solo ciò che è rilevante.</span></div></div>
+              <div class="list-item"><div class="dot"></div><div><strong>Aree private</strong><br><span class="helper">Non tutte le evidenze devono essere pubbliche: alcuni progetti restano riservati.</span></div></div>
+              <div class="list-item"><div class="dot"></div><div><strong>Segregazione dati</strong><br><span class="helper">Fondamentale in contesti multi-cliente, enterprise e PA.</span></div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Compliance readiness</h3>
+            <div class="small-metric">GDPR & privacy <strong>Presidio attivo</strong></div>
+            <div class="small-metric" style="margin-top:12px">Badge e prove verificabili <strong>Audit-friendly</strong></div>
+            <div class="small-metric" style="margin-top:12px">Tracciabilità degli accessi <strong>Governed</strong></div>
+            <div class="small-metric" style="margin-top:12px">Uso enterprise / PA <strong>Compatibile</strong></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const screenIds = ["home","dashboard","user-login","user-portfolio","team","organization","compliance"];
+    const screens = Object.fromEntries(screenIds.map(id => [id, document.getElementById("screen-" + id)]));
+    const navButtons = document.querySelectorAll(".nav-link");
+    const goButtons = document.querySelectorAll(".go-screen");
+    const loginBtn = document.getElementById("login-btn");
+    let currentScreen = "home";
+    let animatedCounters = new WeakSet();
+
+    function setActiveNav(id){
+      navButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.screen === id));
+    }
+
+    function animateCounter(el){
+      if(animatedCounters.has(el)) return;
+      animatedCounters.add(el);
+      const target = Number(el.dataset.target || 0);
+      const prefix = el.dataset.prefix || "";
+      const suffix = el.dataset.suffix || "";
+      const duration = 1200;
+      const start = performance.now();
+      function tick(now){
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = Math.round(target * eased);
+        el.textContent = `${prefix}${value}${suffix}`;
+        if(progress < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function animateBars(scope){
+      scope.querySelectorAll(".bar-fill").forEach(el => {
+        if(el.dataset.done === "1") return;
+        requestAnimationFrame(() => {
+          el.style.width = el.dataset.width || "0%";
+          el.dataset.done = "1";
+        });
+      });
+    }
+
+    function animateScreenContent(id){
+      const screen = screens[id];
+      screen.querySelectorAll(".counter").forEach(animateCounter);
+      animateBars(screen);
+      const ring = document.getElementById("dashboard-ring");
+      if(id === "dashboard" && ring && !ring.dataset.done){
+        ring.dataset.done = "1";
+        const target = 72;
+        const start = performance.now();
+        function tick(now){
+          const progress = Math.min((now - start) / 1200, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const p = Math.round(target * eased);
+          ring.style.setProperty("--p", p);
+          if(progress < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }
+    }
+
+    function showScreen(id){
+      if(!screens[id]) return;
+      screens[currentScreen].classList.remove("active");
+      currentScreen = id;
+      screens[id].classList.add("active");
+      setActiveNav(id === "user-portfolio" ? "user-login" : id);
+      animateScreenContent(id);
+      screens[id].scrollTo({top:0, behavior:"smooth"});
+    }
+
+    navButtons.forEach(btn => btn.addEventListener("click", () => showScreen(btn.dataset.screen)));
+    goButtons.forEach(btn => btn.addEventListener("click", () => showScreen(btn.dataset.target)));
+    if (loginBtn) loginBtn.addEventListener("click", () => showScreen("user-portfolio"));
+
+    animateScreenContent("home");
+
+    document.querySelectorAll(".interactive").forEach(card => {
+      card.addEventListener("mousemove", (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const rx = ((y / rect.height) - 0.5) * -4;
+        const ry = ((x / rect.width) - 0.5) * 4;
+        card.style.transform = `translateY(-6px) rotateX(${rx}deg) rotateY(${ry}deg)`;
+      });
+      card.addEventListener("mouseleave", () => { card.style.transform = ""; });
+    });
+  </script>
+</body>
+</html>
