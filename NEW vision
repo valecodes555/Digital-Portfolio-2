@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Novanext | Digital Portfolio Enterprise</title>
+  <style>
+    :root {
+      --bg: #08111f;
+      --bg-soft: #0f1b2d;
+      --panel: rgba(14, 26, 44, 0.72);
+      --panel-strong: rgba(20, 34, 56, 0.92);
+      --line: rgba(150, 190, 255, 0.18);
+      --text: #ecf4ff;
+      --muted: #9fb2c9;
+      --blue: #5fa8ff;
+      --blue-2: #8ad4ff;
+      --azure: #3c82ff;
+      --cyan: #6ee7f9;
+      --success: #38d39f;
+      --violet: #7a8cff;
+      --orange: #ffb86b;
+      --shadow: 0 24px 80px rgba(0,0,0,.34);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --max: 1400px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 20% 15%, rgba(95,168,255,.24), transparent 28%),
+        radial-gradient(circle at 82% 16%, rgba(110,231,249,.18), transparent 22%),
+        radial-gradient(circle at 50% 80%, rgba(122,140,255,.14), transparent 30%),
+        linear-gradient(180deg, #07101c 0%, #0a1424 45%, #08111f 100%);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: radial-gradient(circle at center, black 45%, transparent 100%);
+      opacity: .35;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 22px;
+      border-right: 1px solid rgba(255,255,255,.06);
+      background: linear-gradient(180deg, rgba(10,18,32,.92), rgba(8,17,31,.78));
+      backdrop-filter: blur(18px);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      z-index: 10;
+    }
+
+    .brand {
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .brand::after {
+      content: "";
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      right: -40px;
+      top: -70px;
+      background: radial-gradient(circle, rgba(95,168,255,.30), transparent 70%);
+      filter: blur(8px);
+    }
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-2) 40%, #d6ecff 100%);
+      position: relative;
+      box-shadow: 0 12px 30px rgba(95,168,255,.35);
+    }
+    .logo::before,
+    .logo::after {
+      content: "";
+      position: absolute;
+      background: rgba(7,16,28,.88);
+      border-radius: 999px;
+      transform: rotate(35deg);
+    }
+    .logo::before { width: 12px; height: 28px; left: 11px; top: 10px; }
+    .logo::after { width: 12px; height: 28px; right: 11px; top: 10px; }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.1rem;
+      letter-spacing: .02em;
+    }
+    .brand p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: .93rem;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .nav a {
+      padding: 14px 16px;
+      border-radius: 16px;
+      color: var(--muted);
+      border: 1px solid transparent;
+      transition: .28s ease;
+      background: rgba(255,255,255,.02);
+    }
+    .nav a:hover,
+    .nav a.active {
+      color: var(--text);
+      border-color: rgba(138,212,255,.22);
+      background: linear-gradient(180deg, rgba(95,168,255,.18), rgba(255,255,255,.04));
+      transform: translateX(5px);
+      box-shadow: 0 10px 30px rgba(60,130,255,.16);
+    }
+
+    .side-note {
+      margin-top: auto;
+      padding: 16px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+    }
+    .side-note small { color: var(--muted); display: block; margin-bottom: 8px; }
+
+    main {
+      padding: 30px 26px 90px;
+    }
+
+    .section {
+      max-width: var(--max);
+      margin: 0 auto 28px;
+      padding: 22px;
+      border: 1px solid rgba(255,255,255,.05);
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      border-radius: 34px;
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(95,168,255,.10), transparent 30%);
+      pointer-events: none;
+    }
+
+    .hero {
+      min-height: 86vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 38px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.06), rgba(255,255,255,.015)),
+        radial-gradient(circle at 15% 20%, rgba(95,168,255,.14), transparent 25%),
+        radial-gradient(circle at 85% 24%, rgba(110,231,249,.12), transparent 22%),
+        radial-gradient(circle at 65% 80%, rgba(122,140,255,.10), transparent 25%);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(138,212,255,.18);
+      color: #d7ecff;
+      font-size: .88rem;
+      width: fit-content;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(360px, .8fr);
+      gap: 28px;
+      align-items: center;
+    }
+
+    .hero h2 {
+      margin: 0;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      line-height: .96;
+      letter-spacing: -.04em;
+      max-width: 10ch;
+    }
+    .hero h2 span {
+      background: linear-gradient(135deg, #ffffff 0%, #9ed4ff 40%, #6ee7f9 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero p.lead {
+      color: #c5d7eb;
+      max-width: 60ch;
+      font-size: 1.08rem;
+      line-height: 1.7;
+      margin: 18px 0 0;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 26px;
+    }
+    .btn {
+      padding: 14px 20px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.08);
+      cursor: pointer;
+      transition: .28s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+    .btn.primary {
+      background: linear-gradient(135deg, var(--azure), var(--blue-2));
+      color: #04101f;
+      box-shadow: 0 16px 40px rgba(95,168,255,.28);
+    }
+    .btn.secondary {
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      backdrop-filter: blur(10px);
+    }
+    .btn:hover { transform: translateY(-2px) scale(1.01); }
+
+    .hero-panel {
+      position: relative;
+      padding: 22px;
+      min-height: 470px;
+      border-radius: 30px;
+      background: linear-gradient(180deg, rgba(17,29,49,.88), rgba(12,22,38,.78));
+      border: 1px solid var(--line);
+      overflow: hidden;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(2px);
+      opacity: .8;
+    }
+    .orb.one { width: 130px; height: 130px; right: -10px; top: 20px; background: radial-gradient(circle, rgba(95,168,255,.45), transparent 68%); }
+    .orb.two { width: 170px; height: 170px; left: -40px; bottom: -20px; background: radial-gradient(circle, rgba(110,231,249,.24), transparent 70%); }
+
+    .mini-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .mini-tag {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.07);
+      font-size: .82rem;
+      color: #d7e8fb;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin: 20px 0;
+    }
+    .stat {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .stat strong { font-size: 1.6rem; display: block; margin-bottom: 6px; }
+    .stat span { color: var(--muted); font-size: .92rem; }
+
+    .flow-card {
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.08);
+      margin-top: 14px;
+    }
+    .flow-card h4 { margin: 0 0 10px; }
+    .flow-items { display: grid; gap: 10px; }
+    .flow-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.04);
+      color: #d7e8fb;
+    }
+    .chip {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(95,168,255,.18);
+      color: #cde9ff;
+      font-size: .8rem;
+      white-space: nowrap;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+    }
+    .section-head h3 {
+      margin: 0 0 8px;
+      font-size: clamp(1.7rem, 3vw, 2.5rem);
+      letter-spacing: -.03em;
+    }
+    .section-head p { margin: 0; color: var(--muted); max-width: 65ch; line-height: 1.65; }
+
+    .panel-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-link,
+    .card,
+    .kpi,
+    .metric,
+    .bar-card,
+    .compliance-card,
+    .timeline-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.07);
+      box-shadow: 0 14px 34px rgba(0,0,0,.22);
+      transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease;
+      transform-style: preserve-3d;
+    }
+    .panel-link:hover,
+    .card:hover,
+    .kpi:hover,
+    .metric:hover,
+    .bar-card:hover,
+    .compliance-card:hover,
+    .timeline-card:hover {
+      transform: translateY(-7px) rotateX(2deg) rotateY(-2deg);
+      border-color: rgba(138,212,255,.24);
+      box-shadow: 0 24px 50px rgba(17,62,134,.25);
+    }
+
+    .panel-link {
+      display: block;
+      padding: 22px;
+      min-height: 260px;
+      isolation: isolate;
+    }
+    .panel-link::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(150deg, rgba(95,168,255,.16), transparent 38%, rgba(110,231,249,.08));
+      opacity: .8;
+      z-index: -1;
+    }
+    .panel-link .icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 18px;
+      background: linear-gradient(135deg, rgba(95,168,255,.26), rgba(138,212,255,.12));
+      border: 1px solid rgba(255,255,255,.10);
+      font-size: 1.4rem;
+      box-shadow: inset 0 0 25px rgba(255,255,255,.04), 0 10px 24px rgba(95,168,255,.16);
+    }
+    .panel-link h4 { margin: 0 0 10px; font-size: 1.2rem; }
+    .panel-link p { margin: 0; color: var(--muted); line-height: 1.65; }
+    .panel-link .foot {
+      margin-top: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #d9edff;
+      font-weight: 600;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+      align-items: start;
+    }
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .kpi { padding: 18px; }
+    .kpi small { color: var(--muted); display: block; margin-bottom: 10px; font-size: .88rem; }
+    .kpi strong { font-size: 2rem; display: block; }
+    .kpi .delta { color: #9ce7c4; margin-top: 8px; font-size: .9rem; }
+
+    .card { padding: 20px; }
+    .card h4 { margin: 0 0 14px; font-size: 1.08rem; }
+    .list { display: grid; gap: 12px; }
+    .list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,.04);
+      border-radius: 14px;
+      color: #d8e8fb;
+    }
+
+    .progress-row { margin-bottom: 14px; }
+    .progress-row:last-child { margin-bottom: 0; }
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: #dbeaff;
+      font-size: .94rem;
+      margin-bottom: 8px;
+    }
+    .progress {
+      width: 100%;
+      height: 12px;
+      background: rgba(255,255,255,.06);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+    .progress > span {
+      display: block;
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--azure), var(--cyan));
+      box-shadow: 0 0 20px rgba(95,168,255,.4);
+      transition: width 1.4s cubic-bezier(.22,1,.36,1);
+    }
+    .progress.alt > span { background: linear-gradient(90deg, var(--success), #8ef0ca); }
+    .progress.violet > span { background: linear-gradient(90deg, var(--violet), #aeb8ff); }
+    .progress.orange > span { background: linear-gradient(90deg, var(--orange), #ffd8a8); }
+
+    .ring-wrap {
+      display: grid;
+      place-items: center;
+      padding: 14px;
+    }
+    .ring {
+      width: 220px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(var(--blue-2) 0deg, var(--blue) 0deg, rgba(255,255,255,.06) 0deg);
+      position: relative;
+      box-shadow: inset 0 0 40px rgba(255,255,255,.04), 0 20px 45px rgba(0,0,0,.28);
+    }
+    .ring::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border-radius: inherit;
+      background: linear-gradient(180deg, rgba(8,17,31,.98), rgba(12,22,38,.98));
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .ring-content {
+      position: relative;
+      text-align: center;
+      z-index: 1;
+    }
+    .ring-content strong {
+      display: block;
+      font-size: 2.6rem;
+      margin-bottom: 4px;
+    }
+    .ring-content span { color: var(--muted); }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .badge {
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(95,168,255,.12);
+      color: #d9ecff;
+      border: 1px solid rgba(138,212,255,.16);
+      font-size: .88rem;
+    }
+
+    .timeline-card { padding: 20px; }
+    .timeline {
+      display: grid;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .timeline-item {
+      position: relative;
+      padding: 14px 14px 14px 18px;
+      border-left: 2px solid rgba(138,212,255,.22);
+      margin-left: 8px;
+      background: rgba(255,255,255,.03);
+      border-radius: 0 14px 14px 0;
+    }
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      left: -6px;
+      top: 16px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue-2), var(--cyan));
+      box-shadow: 0 0 18px rgba(95,168,255,.4);
+    }
+    .timeline-item strong { display: block; margin-bottom: 6px; }
+    .timeline-item span { color: var(--muted); font-size: .92rem; }
+
+    .org-layout {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 18px;
+    }
+    .bar-card { padding: 20px; }
+    .bars { display: grid; gap: 16px; margin-top: 12px; }
+    .bar-row {
+      display: grid;
+      grid-template-columns: 170px 1fr 54px;
+      gap: 12px;
+      align-items: center;
+    }
+    .bar-row label { color: #dbeaff; font-size: .95rem; }
+    .bar {
+      height: 18px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255,255,255,.06);
+      position: relative;
+    }
+    .bar > span {
+      display: block;
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      transition: width 1.6s cubic-bezier(.22,1,.36,1);
+      box-shadow: 0 0 22px rgba(255,255,255,.12);
+    }
+    .b1 > span { background: linear-gradient(90deg, #6ba8ff, #95deff); }
+    .b2 > span { background: linear-gradient(90deg, #7b8cff, #a8b4ff); }
+    .b3 > span { background: linear-gradient(90deg, #37d59d, #93f0cb); }
+    .b4 > span { background: linear-gradient(90deg, #ffb86b, #ffe0b8); }
+    .b5 > span { background: linear-gradient(90deg, #55c7f7, #91f0ff); }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .metric { padding: 18px; }
+    .metric strong { display: block; font-size: 1.7rem; margin-bottom: 8px; }
+    .metric span { color: var(--muted); line-height: 1.5; }
+
+    .compliance-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .compliance-card { padding: 22px; }
+    .compliance-list { display: grid; gap: 12px; margin-top: 14px; }
+    .compliance-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.04);
+      color: #dbecff;
+    }
+
+    .footer {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 18px 6px 0;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1200px) {
+      .panel-grid,
+      .kpis,
+      .three-col { grid-template-columns: repeat(2, 1fr); }
+      .hero-grid,
+      .dashboard-grid,
+      .org-layout,
+      .two-col,
+      .compliance-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 920px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar {
+        position: relative;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid rgba(255,255,255,.06);
+      }
+      main { padding-top: 18px; }
+      .hero { min-height: auto; padding: 26px; }
+      .panel-grid,
+      .kpis,
+      .three-col,
+      .metric-grid { grid-template-columns: 1fr; }
+      .bar-row { grid-template-columns: 1fr; }
+      .hero h2 { max-width: 12ch; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo-wrap">
+          <div class="logo"></div>
+          <div>
+            <h1>Novanext Portfolio</h1>
+            <p>Digital portfolio enterprise per formazione, impatto e capitale umano.</p>
+          </div>
+        </div>
+      </div>
+
+      <nav class="nav" id="nav">
+        <a href="#home" class="active">Home</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#user-area">Area Utente</a>
+        <a href="#team">Team</a>
+        <a href="#organization">Organizzazione</a>
+        <a href="#compliance">Compliance &amp; Accesso</a>
+      </nav>
+
+      <div class="side-note">
+        <small>Posizionamento</small>
+        <strong>Da azienda che vende corsi a infrastruttura che rende visibile e misurabile il capitale umano.</strong>
+      </div>
+    </aside>
+
+    <main>
+      <section class="section hero reveal is-visible" id="home">
+        <div class="eyebrow">● Novanext Enterprise Learning Experience</div>
+        <div class="hero-grid">
+          <div>
+            <h2>La formazione diventa <span>evidenza misurabile</span>.</h2>
+            <p class="lead">Un portfolio digitale enterprise collegabile al sito Novanext, pensato per grandi clienti e Pubblica Amministrazione: progetti reali, competenze applicate, badge verificabili, KPI di adozione e controllo degli accessi.</p>
+            <div class="hero-actions">
+              <a class="btn primary" href="#dashboard">Apri la Dashboard</a>
+              <a class="btn secondary" href="#organization">Vedi KPI Organizzazione</a>
+            </div>
+          </div>
+
+          <div class="hero-panel">
+            <div class="orb one"></div>
+            <div class="orb two"></div>
+            <div class="mini-top">
+              <strong>Executive Snapshot</strong>
+              <span class="mini-tag">Enterprise Ready</span>
+            </div>
+
+            <div class="stat-grid">
+              <div class="stat">
+                <strong class="counter" data-target="184">0</strong>
+                <span>dipendenti attivi nel programma</span>
+              </div>
+              <div class="stat">
+                <strong class="counter" data-target="74" data-suffix="%">0</strong>
+                <span>applicazione pratica delle competenze</span>
+              </div>
+              <div class="stat">
+                <strong class="counter" data-target="128">0</strong>
+                <span>project work completati</span>
+              </div>
+              <div class="stat">
+                <strong class="counter" data-target="31" data-suffix="%">0</strong>
+                <span>riduzione tempi su processi chiave</span>
+              </div>
+            </div>
+
+            <div class="flow-card">
+              <h4>Logica di piattaforma Novanext</h4>
+              <div class="flow-items">
+                <div class="flow-item"><span>Area Utente: competenze, badge, progetti</span><span class="chip">Individuale</span></div>
+                <div class="flow-item"><span>Team: casi interni, processi, collaborazione</span><span class="chip">Collaborativo</span></div>
+                <div class="flow-item"><span>Organizzazione: KPI, adozione, impatto</span><span class="chip">Direzionale</span></div>
+                <div class="flow-item"><span>Compliance &amp; Accesso: GDPR, ruoli, riservatezza</span><span class="chip">Enterprise</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <div class="section-head">
+          <div>
+            <h3>Accessi rapidi alla piattaforma</h3>
+            <p>Questi pannelli sono l’ingresso interattivo alle aree principali del portfolio enterprise. L’obiettivo è far percepire Novanext non come erogatore di corsi, ma come sistema che connette formazione, progetti reali, adozione e governance.</p>
+          </div>
+        </div>
+
+        <div class="panel-grid">
+          <a class="panel-link" href="#user-area">
+            <div class="icon">👤</div>
+            <h4>Area Utente</h4>
+            <p>Portfolio personale con competenze acquisite, badge verificabili, milestone e project work applicati a problemi reali dell’ente o dell’azienda.</p>
+            <div class="foot">Apri area →</div>
+          </a>
+          <a class="panel-link" href="#team">
+            <div class="icon">👥</div>
+            <h4>Team</h4>
+            <p>Progetti collaborativi, miglioramenti di processo e casi interni che mostrano come il lavoro di squadra trasforma la formazione in valore operativo.</p>
+            <div class="foot">Apri area →</div>
+          </a>
+          <a class="panel-link" href="#organization">
+            <div class="icon">🏢</div>
+            <h4>Organizzazione</h4>
+            <p>Vista executive con KPI di adozione, impatto sul business o servizio pubblico, avanzamento competenze e capacità di misurare il capitale umano.</p>
+            <div class="foot">Apri area →</div>
+          </a>
+          <a class="panel-link" href="#compliance">
+            <div class="icon">🔒</div>
+            <h4>Compliance &amp; Accesso</h4>
+            <p>Area enterprise per ruoli, accessi differenziati, tutela dei dati, riservatezza dei progetti e impostazione coerente con contesti PA e grandi aziende.</p>
+            <div class="foot">Apri area →</div>
+          </a>
+        </div>
+      </section>
+
+      <section class="section reveal" id="dashboard">
+        <div class="section-head">
+          <div>
+            <h3>Dashboard</h3>
+            <p>Una vista pensata per HR, direzione e responsabili di funzione: qui la formazione viene letta come avanzamento reale della popolazione aziendale, non come semplice erogazione didattica.</p>
+          </div>
+          <span class="mini-tag">Avanzamento totale dipendenti</span>
+        </div>
+
+        <div class="dashboard-grid">
+          <div>
+            <div class="kpis">
+              <div class="kpi">
+                <small>Competenze sviluppate</small>
+                <strong class="counter" data-target="68" data-suffix="%">0</strong>
+                <div class="delta">+12% ultimo trimestre</div>
+              </div>
+              <div class="kpi">
+                <small>Dipendenti coinvolti</small>
+                <strong class="counter" data-target="184">0</strong>
+                <div class="delta">92% della popolazione target</div>
+              </div>
+              <div class="kpi">
+                <small>Progetti completati</small>
+                <strong class="counter" data-target="128">0</strong>
+                <div class="delta">+26 casi applicati</div>
+              </div>
+              <div class="kpi">
+                <small>Impatto operativo</small>
+                <strong class="counter" data-target="31" data-suffix="%">0</strong>
+                <div class="delta">riduzione tempi medi</div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h4>Stato del programma per cluster</h4>
+              <div class="progress-row">
+                <div class="progress-top"><span>Competenze digitali</span><span>82%</span></div>
+                <div class="progress" data-progress="82"><span></span></div>
+              </div>
+              <div class="progress-row">
+                <div class="progress-top"><span>Applicazione su processi reali</span><span>74%</span></div>
+                <div class="progress alt" data-progress="74"><span></span></div>
+              </div>
+              <div class="progress-row">
+                <div class="progress-top"><span>Adozione manageriale</span><span>69%</span></div>
+                <div class="progress violet" data-progress="69"><span></span></div>
+              </div>
+              <div class="progress-row">
+                <div class="progress-top"><span>Scalabilità interna</span><span>63%</span></div>
+                <div class="progress orange" data-progress="63"><span></span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="two-col">
+            <div class="card ring-wrap">
+              <div class="ring" data-ring="76">
+                <div class="ring-content">
+                  <strong class="ring-value">76%</strong>
+                  <span>Readiness Index</span>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <h4>Insight prioritari</h4>
+              <div class="list">
+                <div class="list-item"><span>Unità con maggiore adozione</span><strong>Innovazione &amp; Servizi</strong></div>
+                <div class="list-item"><span>Area da rafforzare</span><strong>Middle Management</strong></div>
+                <div class="list-item"><span>Indicatore più forte</span><strong>Project work applicati</strong></div>
+                <div class="list-item"><span>Segnale enterprise</span><strong>Governance accessi attiva</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section reveal" id="user-area">
+        <div class="section-head">
+          <div>
+            <h3>Area Utente</h3>
+            <p>Il portfolio personale integra la logica del livello individuale: progetti del singolo dipendente, competenze acquisite, badge verificabili e evidenza di applicazione pratica su problemi reali.</p>
+          </div>
+          <span class="mini-tag">Profilo certificato</span>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <h4>Mario Rossi · Funzionario PA</h4>
+            <p style="color: var(--muted); line-height: 1.7; margin-top: 0;">Ha partecipato a un percorso Novanext su digitalizzazione dei servizi e redesign dei processi. Il portfolio mostra in modo dinamico non solo cosa ha studiato, ma soprattutto cosa ha applicato.</p>
+            <div class="badge-row">
+              <span class="badge">Badge verificabile · Process Automation</span>
+              <span class="badge">Badge verificabile · UX Service Design</span>
+              <span class="badge">Badge verificabile · Data Literacy</span>
+            </div>
+            <div style="height: 18px"></div>
+            <div class="progress-row">
+              <div class="progress-top"><span>Competenze acquisite</span><span>86%</span></div>
+              <div class="progress" data-progress="86"><span></span></div>
+            </div>
+            <div class="progress-row">
+              <div class="progress-top"><span>Applicazione pratica</span><span>78%</span></div>
+              <div class="progress alt" data-progress="78"><span></span></div>
+            </div>
+            <div class="progress-row">
+              <div class="progress-top"><span>Maturità portfolio</span><span>81%</span></div>
+              <div class="progress violet" data-progress="81"><span></span></div>
+            </div>
+          </div>
+
+          <div class="timeline-card">
+            <h4>Milestone individuali</h4>
+            <div class="timeline">
+              <div class="timeline-item">
+                <strong>Digitalizzazione del protocollo</strong>
+                <span>Riduzione del 30% dei tempi medi di lavorazione su un processo amministrativo ad alta frequenza.</span>
+              </div>
+              <div class="timeline-item">
+                <strong>Ridisegno UX servizio interno</strong>
+                <span>Nuovo flusso guidato per utenti interni, con meno errori in fase di compilazione e maggiore chiarezza.</span>
+              </div>
+              <div class="timeline-item">
+                <strong>Badge aggiornabili nel tempo</strong>
+                <span>Le certificazioni non sono statiche: si arricchiscono con nuovi progetti, evidenze e risultati misurabili.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section reveal" id="team">
+        <div class="section-head">
+          <div>
+            <h3>Team</h3>
+            <p>Questa sezione raccoglie tutto ciò che riguarda il livello team: progetti collaborativi, miglioramenti di processo, casi interni e impatto condiviso. L’obiettivo è mostrare la capacità di trasformare la formazione in innovazione diffusa.</p>
+          </div>
+          <span class="mini-tag">Livello Team / Ufficio</span>
+        </div>
+
+        <div class="three-col">
+          <div class="card">
+            <h4>Progetti collaborativi</h4>
+            <div class="list">
+              <div class="list-item"><span>Sistema documentale</span><strong>+25% efficienza</strong></div>
+              <div class="list-item"><span>Automazione processi</span><strong>-40% attività manuali</strong></div>
+              <div class="list-item"><span>Cruscotto monitoraggio servizi</span><strong>visibilità centralizzata</strong></div>
+            </div>
+          </div>
+          <div class="card">
+            <h4>Miglioramenti di processo</h4>
+            <div class="progress-row">
+              <div class="progress-top"><span>Standardizzazione operativa</span><span>72%</span></div>
+              <div class="progress" data-progress="72"><span></span></div>
+            </div>
+            <div class="progress-row">
+              <div class="progress-top"><span>Riduzione colli di bottiglia</span><span>67%</span></div>
+              <div class="progress alt" data-progress="67"><span></span></div>
+            </div>
+            <div class="progress-row">
+              <div class="progress-top"><span>Riutilizzo casi interni</span><span>79%</span></div>
+              <div class="progress violet" data-progress="79"><span></span></div>
+            </div>
+          </div>
+          <div class="card">
+            <h4>Casi interni</h4>
+            <p style="color: var(--muted); line-height: 1.7; margin-top: 0;">Ogni case study è collegato a un problema reale dell’ente o dell’azienda, con obiettivi misurabili e output riutilizzabili da altri uffici o team.</p>
+            <div class="badge-row">
+              <span class="badge">Case: Onboarding digitale</span>
+              <span class="badge">Case: Protocollo smart</span>
+              <span class="badge">Case: Servizi al cittadino</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section reveal" id="organization">
+        <div class="section-head">
+          <div>
+            <h3>Organizzazione</h3>
+            <p>La vista organizzativa aggrega KPI di adozione, impatto e capacità di scalare l’apprendimento. Qui Novanext si posiziona come partner strategico: numeri, visibilità e decisioni basate sull’evidenza.</p>
+          </div>
+          <span class="mini-tag">KPI di adozione</span>
+        </div>
+
+        <div class="org-layout">
+          <div class="bar-card">
+            <h4>Adozione per indicatore</h4>
+            <div class="bars">
+              <div class="bar-row b1">
+                <label>Skill sviluppate</label>
+                <div class="bar" data-bar="84"><span></span></div>
+                <strong>84%</strong>
+              </div>
+              <div class="bar-row b2">
+                <label>Applicazione pratica</label>
+                <div class="bar" data-bar="74"><span></span></div>
+                <strong>74%</strong>
+              </div>
+              <div class="bar-row b3">
+                <label>Progetti completati</label>
+                <div class="bar" data-bar="79"><span></span></div>
+                <strong>79%</strong>
+              </div>
+              <div class="bar-row b4">
+                <label>Efficienza processi</label>
+                <div class="bar" data-bar="66"><span></span></div>
+                <strong>66%</strong>
+              </div>
+              <div class="bar-row b5">
+                <label>Adozione manageriale</label>
+                <div class="bar" data-bar="71"><span></span></div>
+                <strong>71%</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric">
+              <strong>+41%</strong>
+              <span>Capitale umano reso visibile attraverso portfolio, badge e progetti collegati a risultati osservabili.</span>
+            </div>
+            <div class="metric">
+              <strong>-28%</strong>
+              <span>Riduzione tempi medi su processi ad alta frequenza dopo l’applicazione dei project work.</span>
+            </div>
+            <div class="metric">
+              <strong>3 livelli</strong>
+              <span>Individuale, team e organizzazione: una stessa infrastruttura, tre viste decisionali complementari.</span>
+            </div>
+            <div class="metric">
+              <strong>Enterprise fit</strong>
+              <span>Un impianto adatto a grandi aziende e PA, dove contano governance, reporting e controllo dei dati.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section reveal" id="compliance">
+        <div class="section-head">
+          <div>
+            <h3>Compliance &amp; Accesso</h3>
+            <p>Per clienti enterprise e Pubblica Amministrazione non tutto deve essere pubblico. L’area compliance rende chiaro che il portfolio può essere governato con ruoli, visibilità differenziata e protezione delle informazioni.</p>
+          </div>
+          <span class="mini-tag">Enterprise Control Layer</span>
+        </div>
+
+        <div class="compliance-grid">
+          <div class="compliance-card">
+            <h4>Accesso differenziato</h4>
+            <div class="compliance-list">
+              <div class="compliance-item"><span>Dipendente</span><strong>vede il proprio portfolio</strong></div>
+              <div class="compliance-item"><span>Responsabile di team</span><strong>vede casi e metriche di team</strong></div>
+              <div class="compliance-item"><span>Direzione / HR</span><strong>vede dashboard aggregate</strong></div>
+              <div class="compliance-item"><span>Cliente / ente</span><strong>visibilità selettiva su evidenze condivise</strong></div>
+            </div>
+          </div>
+
+          <div class="compliance-card">
+            <h4>Requisiti enterprise</h4>
+            <div class="compliance-list">
+              <div class="compliance-item"><span>Aree private</span><strong>contenuti riservati e filtrati</strong></div>
+              <div class="compliance-item"><span>Controllo dati</span><strong>governance e tracciabilità</strong></div>
+              <div class="compliance-item"><span>GDPR</span><strong>allineamento ai dati personali</strong></div>
+              <div class="compliance-item"><span>Badge verificabili</span><strong>collegati a progetti e ruoli</strong></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">
+        Concept demo per area Novanext: portfolio digitale enterprise orientato a grandi clienti e Pubblica Amministrazione.
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          const counters = entry.target.querySelectorAll('.counter');
+          counters.forEach(animateCounter);
+
+          const progresses = entry.target.querySelectorAll('.progress');
+          progresses.forEach((progress) => {
+            const value = progress.dataset.progress;
+            const bar = progress.querySelector('span');
+            if (bar && !bar.dataset.done) {
+              bar.style.width = value + '%';
+              bar.dataset.done = 'true';
+            }
+          });
+
+          const bars = entry.target.querySelectorAll('.bar');
+          bars.forEach((barWrap) => {
+            const value = barWrap.dataset.bar;
+            const bar = barWrap.querySelector('span');
+            if (bar && !bar.dataset.done) {
+              bar.style.width = value + '%';
+              bar.dataset.done = 'true';
+            }
+          });
+
+          const ring = entry.target.querySelector('.ring');
+          if (ring && !ring.dataset.done) {
+            const val = Number(ring.dataset.ring || 0);
+            ring.style.background = `conic-gradient(var(--blue-2) 0deg, var(--blue) ${val * 3.6}deg, rgba(255,255,255,.06) ${val * 3.6}deg)`;
+            ring.dataset.done = 'true';
+          }
+        }
+      });
+    }, { threshold: 0.18 });
+
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+    function animateCounter(el) {
+      if (el.dataset.done) return;
+      const target = Number(el.dataset.target || 0);
+      const suffix = el.dataset.suffix || '';
+      const duration = 1400;
+      const startTime = performance.now();
+
+      function update(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        const value = Math.round(target * ease);
+        el.textContent = value + suffix;
+        if (progress < 1) requestAnimationFrame(update);
+      }
+      requestAnimationFrame(update);
+      el.dataset.done = 'true';
+    }
+
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav a');
+    const navObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          navLinks.forEach((link) => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-35% 0px -50% 0px', threshold: 0.01 });
+    sections.forEach((section) => navObserver.observe(section));
+
+    document.querySelectorAll('.panel-link, .card, .kpi, .metric, .bar-card, .compliance-card, .timeline-card').forEach((card) => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const rotateY = ((x / rect.width) - 0.5) * 7;
+        const rotateX = ((y / rect.height) - 0.5) * -7;
+        card.style.transform = `translateY(-6px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+  </script>
+</body>
+</html>
