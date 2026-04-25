@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Novanext Impact System</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="sidebar">
+  <h2>Novanext</h2>
+  <a href="index.html">Home</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="user.html">Area Utente</a>
+  <a href="team.html">Team</a>
+  <a href="organization.html">Organizzazione</a>
+  <a href="compliance.html">Compliance</a>
+</div>
+
+<div class="main">
+  <h1>Novanext Impact System</h1>
+  <p>Trasformiamo la formazione in capitale misurabile</p>
+
+  <div class="grid">
+    <a href="user.html" class="card">👤 Area Utente</a>
+    <a href="team.html" class="card">👥 Team</a>
+    <a href="organization.html" class="card">🏢 Organizzazione</a>
+    <a href="compliance.html" class="card">🔒 Compliance & Accesso</a>
+  </div>
+</div>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Dashboard</title>
+<link rel="stylesheet" href="styles.css">
+<script src="app.js" defer></script>
+</head>
+<body>
+
+<div class="sidebar">
+  <h2>Novanext</h2>
+  <a href="index.html">Home</a>
+</div>
+
+<div class="main">
+<h1>Dashboard Enterprise</h1>
+
+<div class="kpi-container">
+  <div class="kpi-box"><h3>Competenze</h3><p id="skills">0%</p></div>
+  <div class="kpi-box"><h3>Progetti</h3><p id="projects">0</p></div>
+  <div class="kpi-box"><h3>Impatto</h3><p id="impact">0%</p></div>
+</div>
+
+</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Area Utente</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="main">
+<h1>Accesso Area Utente</h1>
+
+<div class="card">
+  <p>Email</p>
+  <input type="text">
+  <p>Password</p>
+  <input type="password">
+  <br><br>
+  <a href="user-portfolio.html" class="btn">Accedi</a>
+</div>
+
+</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Portfolio Utente</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="main">
+<h1>Mario Rossi</h1>
+<p>Digital Transformation Specialist - Enterprise</p>
+
+<div class="card">
+  🚀 Digitalizzazione processi → -30% tempi
+</div>
+
+<div class="card">
+  🎯 Competenze
+  <p>UX • Automation • Data</p>
+</div>
+
+</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Team</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="main">
+<h1>Team Innovazione</h1>
+
+<div class="card">Sistema documentale</div>
+<div class="card">Automazione processi</div>
+
+<div class="card">
+  🤝 Competenze condivise:
+  <p>💻 ⚙️ 📊 🎯</p>
+</div>
+
+</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Organizzazione</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="main">
+<h1>KPI Organizzazione</h1>
+
+<div class="bar-container">
+  <div class="bar" style="width:70%">Adozione 70%</div>
+  <div class="bar" style="width:50%">Applicazione 50%</div>
+  <div class="bar" style="width:80%">Impatto 80%</div>
+</div>
+
+</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Compliance</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="main">
+<h1>Compliance & Accesso</h1>
+
+<div class="card">🔒 GDPR Compliance</div>
+<div class="card">👥 Accesso differenziato</div>
+<div class="card">📊 Controllo dati enterprise</div>
+
+</div>
+</body>
+</html>
+body {
+  margin:0;
+  font-family: Arial;
+  display:flex;
+  background:#f5f7fb;
+}
+
+.sidebar {
+  width:220px;
+  background:#1e2a38;
+  color:white;
+  height:100vh;
+  padding:20px;
+}
+
+.sidebar a {
+  display:block;
+  color:white;
+  margin:10px 0;
+  text-decoration:none;
+}
+
+.main {
+  padding:40px;
+  flex:1;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:20px;
+}
+
+.card {
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  transition:0.3s;
+  text-decoration:none;
+  color:black;
+}
+
+.card:hover {
+  transform:scale(1.05);
+}
+
+.kpi-container {
+  display:flex;
+  gap:20px;
+}
+
+.kpi-box {
+  background:white;
+  padding:20px;
+  border-radius:10px;
+}
+
+.bar-container {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.bar {
+  background:#3A7BFF;
+  color:white;
+  padding:10px;
+  border-radius:6px;
+}
+
+.btn {
+  background:#3A7BFF;
+  color:white;
+  padding:10px 15px;
+  text-decoration:none;
+  border-radius:6px;
+}
+let skills = document.getElementById("skills");
+let projects = document.getElementById("projects");
+let impact = document.getElementById("impact");
+
+if (skills) {
+  skills.innerText = "68%";
+  projects.innerText = "120";
+  impact.innerText = "-32%";
+}
